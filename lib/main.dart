@@ -3,50 +3,66 @@ import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './models/transaction.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+      ),
+      debugShowCheckedModeBanner: false,
+      title: 'Masrofy App',
+      home: MyHomePage(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  final List<Transaction> _usertransactions = [
+class MyHomePage extends StatefulWidget {
+  // String titleInput;
+  // String amountInput;
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
     Transaction(
-      id: '1',
-      title: 'Shoe',
-      amount: 20.45,
+      id: 't1',
+      title: 'New Shoes',
+      amount: 69.99,
       dateTime: DateTime.now(),
     ),
     Transaction(
-      id: '2',
-      title: 'bag',
-      amount: 50.45,
+      id: 't2',
+      title: 'Weekly Groceries',
+      amount: 16.53,
       dateTime: DateTime.now(),
     ),
   ];
 
-  void _addnewtransaction(String TXtitle, double TXamount) {
-    final newTX = Transaction(
-      title: TXtitle,
-      amount: TXamount,
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+      title: txTitle,
+      amount: txAmount,
       dateTime: DateTime.now(),
       id: DateTime.now().toString(),
     );
+
     setState(() {
-      _usertransactions.add(newTX);
+      _userTransactions.add(newTx);
     });
   }
 
-  void _startaddingnewtransction(BuildContext ctx) {
+  void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
         return GestureDetector(
           onTap: () {},
-          child: NewinpTransaction(_addnewtransaction),
+          child: NewinpTransaction(_addNewTransaction),
           behavior: HitTestBehavior.opaque,
         );
       },
@@ -55,54 +71,38 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Masrofy'),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => _startaddingnewtransction(context)),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Masrofy App'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              child: Card(
+                color: Colors.blue,
+                child: Text('CHART!'),
+                elevation: 5,
+              ),
+            ),
+            TransactionList(_userTransactions),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.all(15.0),
-                child: Card(
-                  child: Text('chart'),
-                  elevation: 15.0,
-                ),
-              ), //chart
-              TransactionList(_usertransactions),
-              //  NewinpTransaction(_addnewtransaction),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () => _startaddingnewtransction(context)
-            // showModalBottomSheet(
-            //   context: context,
-            //   builder: (context) {
-            //     return StatefulBuilder(
-            //       builder: (BuildContext context, StateSetter setState) {
-            //         return Column(
-            //           children: [],
-            //         );
-            //       },
-            //     );
-            //   },
-            // );
-
-            ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTransaction(context),
       ),
     );
   }
 }
-//=> _startaddingnewtransction(context)

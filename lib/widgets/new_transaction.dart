@@ -1,54 +1,66 @@
 import 'package:flutter/material.dart';
 
-class NewinpTransaction extends StatelessWidget {
-  final Function addTX;
-  final TextEditingController titlecontroller = TextEditingController();
-  final TextEditingController amountcontroller = TextEditingController();
+class NewinpTransaction extends StatefulWidget {
+  final Function addTx;
+  NewinpTransaction(this.addTx);
 
-  NewinpTransaction(this.addTX);
+  @override
+  _NewinpTransactionState createState() => _NewinpTransactionState();
+}
 
-  void Submitdata() {
-    final enteredtitle = titlecontroller.text;
-    final enteredamount = double.parse(amountcontroller.text);
-    if (enteredtitle.isEmpty || enteredamount <= 0) {
+class _NewinpTransactionState extends State<NewinpTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void submitData() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.parse(amountController.text);
+
+    if (enteredTitle.isEmpty || enteredAmount <= 0) {
       return;
     }
 
-    addTX(
-      enteredtitle,
-      enteredamount,
+    widget.addTx(
+      enteredTitle,
+      enteredAmount,
     );
+
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        TextField(
-          decoration: InputDecoration(labelText: 'Title'),
-          controller: titlecontroller,
-          onSubmitted: (_) => Submitdata(),
-        ),
-        TextField(
-          decoration: InputDecoration(labelText: 'Amount'),
-          controller: amountcontroller,
-          keyboardType: TextInputType.number,
-          onSubmitted: (_) => Submitdata(),
-        ),
-        // ignore: deprecated_member_use
-        FlatButton(
-          child: Text(
-            'Add Transaction',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18.0,
+    return Card(
+      elevation: 5,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(labelText: 'Title'),
+              controller: titleController,
+              onSubmitted: (_) => submitData(),
+              // onChanged: (val) {
+              //   titleInput = val;
+              // },
             ),
-          ),
-          onPressed: () {
-            Submitdata();
-          },
+            TextField(
+              decoration: InputDecoration(labelText: 'Amount'),
+              controller: amountController,
+              keyboardType: TextInputType.number,
+              onSubmitted: (_) => submitData(),
+              // onChanged: (val) => amountInput = val,
+            ),
+            FlatButton(
+              child: Text('Add Transaction'),
+              textColor: Colors.purple,
+              onPressed: submitData,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
